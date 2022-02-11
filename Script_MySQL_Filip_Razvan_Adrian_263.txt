@@ -1,0 +1,264 @@
+-- CREARE
+
+
+CREATE TABLE `regiuni` (
+  `id_regiune` int(11) NOT NULL AUTO_INCREMENT,
+  `nume_regiune` varchar(30) NOT NULL,
+  PRIMARY KEY (`id_regiune`)
+)
+
+
+CREATE TABLE `utilizator` (
+  `id_utilizator` int(10) NOT NULL AUTO_INCREMENT,
+  `nume` varchar(30) NOT NULL,
+  `prenume` varchar(30) NOT NULL,
+  `email` varchar(30) NOT NULL,
+  `parola` varchar(30) NOT NULL,
+  `data_nasterii` date NOT NULL,
+  `gen` varchar(1) NOT NULL CHECK (`gen` in ('b','f')),
+  `id_regiune` int(1) DEFAULT NULL,
+  `adresa` varchar(30) NOT NULL,
+  PRIMARY KEY (`id_utilizator`),
+  KEY `gen_constraint` (`id_regiune`),
+  CONSTRAINT `gen_constraint` FOREIGN KEY (`id_regiune`) REFERENCES `regiuni` (`id_regiune`) ON DELETE SET NULL
+)
+
+CREATE TABLE `pagini` (
+  `id_pagina` int(10) NOT NULL AUTO_INCREMENT,
+  `nume_pagina` varchar(30) NOT NULL,
+  `descriere_pagina` varchar(300) NOT NULL,
+  PRIMARY KEY (`id_pagina`)
+)
+
+
+	
+CREATE TABLE `evenimente` (
+  `id_eveniment` int(10) NOT NULL AUTO_INCREMENT,
+  `titlu_eveniment` varchar(30) NOT NULL,
+  `descriere_eveniment` varchar(300) NOT NULL,
+  `data_incepere` date NOT NULL,
+  `data_incheiere` date NOT NULL,
+  PRIMARY KEY (`id_eveniment`)
+)
+
+
+CREATE TABLE `piata` (
+  `id_produs` int(10) NOT NULL AUTO_INCREMENT,
+  `id_utilizator` int(10) NOT NULL,
+  `nume_produs` varchar(30) NOT NULL,
+  `descriere_produs` varchar(300) DEFAULT NULL,
+  `pret_produs` int(10) NOT NULL,
+  PRIMARY KEY (`id_produs`),
+  KEY `utilizator_piata_fk` (`id_utilizator`),
+  CONSTRAINT `utilizator_piata_fk` FOREIGN KEY (`id_utilizator`) REFERENCES `utilizator` (`id_utilizator`) ON DELETE CASCADE
+)
+	
+CREATE TABLE `mesaje_private` (
+  `id_mesaj` int(20) NOT NULL AUTO_INCREMENT,
+  `id_emitator` int(10) NOT NULL,
+  `id_destinatar` int(10) NOT NULL,
+  `continut_mesaj` varchar(300) NOT NULL,
+  `data_mesaj` date NOT NULL,
+  PRIMARY KEY (`id_mesaj`),
+  KEY `utilizator_emitator_fk` (`id_emitator`),
+  KEY `utilizator_destinatar_fk` (`id_destinatar`),
+  CONSTRAINT `utilizator_destinatar_fk` FOREIGN KEY (`id_destinatar`) REFERENCES `utilizator` (`id_utilizator`) ON DELETE CASCADE ,
+  CONSTRAINT `utilizator_emitator_fk` FOREIGN KEY (`id_emitator`) REFERENCES `utilizator` (`id_utilizator`) ON DELETE CASCADE
+)
+
+CREATE TABLE `postari` (
+  `id_postare` int(20) NOT NULL AUTO_INCREMENT,
+  `id_utilizator` int(10) NOT NULL,
+  `continut_postare` varchar(300) NOT NULL,
+  `data_postare` date NOT NULL,
+  PRIMARY KEY (`id_postare`),
+  KEY `utilizator_postare_fk` (`id_utilizator`),
+  CONSTRAINT `utilizator_postare_fk` FOREIGN KEY (`id_utilizator`) REFERENCES `utilizator` (`id_utilizator`) ON DELETE CASCADE
+)
+
+
+
+
+
+---------------------------------------
+--------- Tabele asociative------------
+
+
+CREATE TABLE `prieteni` (
+  `id_utilizator1` int(10) NOT NULL,
+  `id_utilizator2` int(10) NOT NULL,
+  `raspuns` int(11) NOT NULL,
+  PRIMARY KEY (`id_utilizator1`,`id_utilizator2`),
+  KEY `utilizator2_prieteni_fk` (`id_utilizator2`),
+  CONSTRAINT `utilizator1_prieteni_fk` FOREIGN KEY (`id_utilizator1`) REFERENCES `utilizator` (`id_utilizator`) ON DELETE CASCADE,
+  CONSTRAINT `utilizator2_prieteni_fk` FOREIGN KEY (`id_utilizator2`) REFERENCES `utilizator` (`id_utilizator`) ON DELETE CASCADE
+)
+
+CREATE TABLE `participare_eveniment` (
+  `id_utilizator` int(10) NOT NULL,
+  `id_eveniment` int(10) NOT NULL,
+  PRIMARY KEY (`id_utilizator`,`id_eveniment`),
+  KEY `eveniment_evenpart_fk` (`id_eveniment`),
+  CONSTRAINT `eveniment_evenpart_fk` FOREIGN KEY (`id_eveniment`) REFERENCES `evenimente` (`id_eveniment`) ON DELETE CASCADE ,
+  CONSTRAINT `utilizator_eveniment_fk` FOREIGN KEY (`id_utilizator`) REFERENCES `utilizator` (`id_utilizator`) ON DELETE CASCADE
+)
+
+
+CREATE TABLE `aprecieri_pagina` (
+  `id_pagina` int(10) NOT NULL,
+  `id_utilizator` int(10) NOT NULL,
+  PRIMARY KEY (`id_pagina`,`id_utilizator`),
+  KEY `utilizator_aprecieri_fk` (`id_utilizator`),
+  CONSTRAINT `aprecieri_pagina_fk` FOREIGN KEY (`id_pagina`) REFERENCES `pagini` (`id_pagina`) ON DELETE CASCADE ,
+  CONSTRAINT `utilizator_aprecieri_fk` FOREIGN KEY (`id_utilizator`) REFERENCES `utilizator` (`id_utilizator`) ON DELETE CASCADE
+)
+
+------------------------------------------
+------------ Inserare date ---------------
+
+
+--inserare REGIUNI
+
+
+INSERT INTO `regiuni` (`id_regiune`, `nume_regiune`) VALUES
+(1, 'Europa'),
+(2, 'America'),
+(3, 'Asia'),
+(4, 'Australia'),
+(5, 'Africa');
+
+
+--inserare UTILIZATOR
+
+
+			      
+INSERT INTO `utilizator` (`id_utilizator`, `nume`, `prenume`, `email`, `parola`, `data_nasterii`, `gen`, `id_regiune`, `adresa`) VALUES
+(1, 'Filip', 'Razvan', 'razvan.filip@s.unibuc.ro', 'razvan1234', '2001-01-15', 'b', 1, 'Razvad,str. Ploiesti , nr.28'),
+(2, 'Aciu', 'Mircea', 'aciu.mircea@s.unibuc.ro', 'mircea1234', '1995-02-18', 'b', 1, 'Targoviste,str. 1 Mai, nr.42'),
+(3, 'Chelaru', 'Gabriela', 'gabriela.chelaru@s.unibuc.ro', 'gabriela1234', '2001-10-08', 'f', 1, 'Baleni, soseaua Bucuresti-Targ'),
+(4, 'Cernat', 'Mihai', 'mihai.cernat@s.unibuc.ro', 'mihai1234', '2002-05-13', 'b', 1, 'Targoviste,str. 8 Martie, nr.2'),
+(5, 'Adam', 'David', 'david.adam@gmail.com', 'david1234', '2005-04-11', 'b', 2, '2115 w Farwell ave Chicago il '),
+(6, 'Tom', 'Oliver', 'oliver.tom@gmail.com', 'oliver1234', '1993-09-22', 'b', 2, 'Northwest Arctic Ambler zip co'),
+(7, 'Ashley', 'Adele', 'adele.ashley@gmail.com', 'adele1234', '1994-03-12', 'f', 2, 'Northwest Arctic Deering zip c'),
+(8, 'Darie', 'Eleonora', 'eleonora.darie@gmail.com', 'eleonora1234', '1990-04-18', 'f', 1, 'Targoviste, str.Cetatii nr.1'),
+(9, 'Miclaus', 'Simona', 'simona.miclaus@yahoo.com', 'simona1234', '2000-09-22', 'f', 1, 'Teis, str.Ialomitei nr.43'),
+(10, 'Neamt', 'Liviu', 'liviu.neamt@yahoo.com', 'liviu1234', '2002-10-25', 'b', 1, 'Gorgota, str.Macilor nr. 22');
+
+
+--inserare PAGINI
+
+
+
+INSERT INTO `pagini` (`id_pagina`, `nume_pagina`, `descriere_pagina`) VALUES
+(1, 'Mihai Bendeac', 'Mihai Bendeac este un actor de teatru și film, jucând în filmele Milionari de Weekend și Supraviețuitorul. Mihai a scris toate cele 6 sezoane În Puii Mei pe care le-a și interpretat. A mai jucat în show-urile La Bloc, Românii au Artiști, Băieți de Oraș, iComedy, Mondenii, Jurnalul unui burlac și în '),
+(2, 'Delia Matache', 'Delia Matache, cunoscută mai bine sub numele de scenă Delia, este o cântăreață, compozitoare, dansatoare, vedetă de televiziune și jurată în cadrul competiției muzicale internaționale X Factor România și a emisiunii iUmor.'),
+(3, 'Cătălin Ștefan Ion', 'Cătălin Ștefan Ion, cunoscut sub pseudonimul Cheloo, este un rapper român, unul din membrii formației române de hip-hop Paraziții. A lansat primul său album de studio solo intitulat Sindromul Tourette în anul 2003, album premiat cu Discul de Aur pentru numărul mare de exemplare vândute.'),
+(4, 'Andreea Raicu', 'Andreea Raicu este o vedetă de televiziune din România. A debutat ca model, câștigând câteva importante concursuri de modelling apoi a intrat în televiziune unde s-a consacrat prezentând emisiuni importante de divertisment ca Big Brother și Megastar.'),
+(5, 'Laura Petrescu', 'Laura Petrescu , cunoscută sub numele de scenă Lora, este o cântăreață de muzică pop-dance, actriță, fotomodel, prezentatoare a emisiunii \"Vorbește lumea\", de la Pro Tv și vedetă de televiziune din România. Înainte de a-și începe cariera solo, a făcut parte din formația Wassabi. S-a născut în Vaslui');
+
+
+
+--inserare POSTARI 
+
+
+
+INSERT INTO `postari` (`id_postare`, `id_utilizator`, `continut_postare`, `data_postare`) VALUES
+(1, 4, 'Test pentru postarea cu numarul 1.', '2021-12-03'),
+(2, 7, 'Test pentru postarea cu numarul 2.', '2021-12-13'),
+(3, 2, 'Test pentru postarea cu numarul 3.', '2021-12-25'),
+(4, 1, 'Test pentru postarea cu numarul 4.', '2021-12-19'),
+(5, 8, 'Test pentru postarea cu numarul 5.', '2021-12-22');
+
+
+
+
+--inserare MESAJE_PRIVATE
+
+
+
+INSERT INTO `mesaje_private` (`id_mesaj`, `id_emitator`, `id_destinatar`, `continut_mesaj`, `data_mesaj`) VALUES
+(1, 2, 3, 'Test pentru mesajul 1.', '2021-12-09'),
+(2, 3, 2, 'Test pentru mesajul 2.', '2021-12-09'),
+(3, 6, 1, 'Test pentru mesajul 3.', '2021-11-02'),
+(4, 1, 6, 'Test pentru mesajul 4.', '2021-11-02'),
+(5, 8, 9, 'Test pentru mesajul 5.', '2021-12-11');
+
+
+
+--inserare PIATA
+
+
+
+INSERT INTO `piata` (`id_produs`, `id_utilizator`, `nume_produs`, `descriere_produs`, `pret_produs`) VALUES
+(1, 4, 'Produs 1', 'Descriere produs 1', 200),
+(2, 1, 'Produs 2', 'Descriere produs 2', 5000),
+(3, 6, 'Produs 3', 'Descriere produs 3', 10),
+(4, 9, 'Produs 4', 'Descriere produs 4', 75),
+(5, 3, 'Produs 5', 'Descriere produs 5', 90);
+
+
+
+--inserare EVENIMENTE
+
+
+
+INSERT INTO `evenimente` (`id_eveniment`, `titlu_eveniment`, `descriere_eveniment`, `data_incepere`, `data_incheiere`) VALUES
+(1, 'Titlu eveniment 1', 'Descriere eveniment 1', '2021-12-01', '2021-12-09'),
+(2, 'Titlu eveniment 2', 'Descriere eveniment 2', '2021-12-12', '2021-12-14'),
+(3, 'Titlu eveniment 3', 'Descriere eveniment 3', '2021-12-16', '2021-12-18'),
+(4, 'Titlu eveniment 4', 'Descriere eveniment 4', '2021-11-01', '2021-12-08'),
+(5, 'Titlu eveniment 5', 'Descriere eveniment 5', '2021-08-04', '2021-10-13');
+
+
+
+
+--inserare PARTICIPARE_EVENIMENT
+
+
+
+INSERT INTO `participare_eveniment` (`id_utilizator`, `id_eveniment`) VALUES
+(1, 2),
+(1, 4),
+(1, 5),
+(3, 1),
+(3, 2),
+(4, 2),
+(5, 1),
+(5, 2),
+(5, 3),
+(9, 2);
+
+
+--inserare PRIETENI
+
+
+INSERT INTO `prieteni` (`id_utilizator1`, `id_utilizator2`, `raspuns`) VALUES
+(1, 2, 1),
+(1, 3, 1),
+(1, 4, 1),
+(1, 5, 1),
+(1, 6, 0),
+(1, 7, 0),
+(1, 8, 1),
+(1, 9, 0),
+(1, 10, 1),
+(2, 5, 1);
+
+
+
+--inserare APRECIERI_PAGINA
+
+INSERT INTO `aprecieri_pagina` (`id_pagina`, `id_utilizator`) VALUES
+(1, 1),
+(1, 2),
+(1, 3),
+(1, 4),
+(1, 5),
+(2, 7),
+(3, 9),
+(4, 1),
+(4, 2),
+(5, 3);
+
+
+

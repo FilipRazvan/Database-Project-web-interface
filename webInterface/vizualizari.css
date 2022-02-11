@@ -1,0 +1,72 @@
+.btn {
+  display: inline-block;
+  padding: 0.5em 3em;
+  border: 0.16em solid #ffffff;
+
+  box-sizing: border-box;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-family: "Roboto", sans-serif;
+  font-weight: 700;
+  color: #ffffff;
+  text-align: center;
+  transition: all 0.15s;
+  height: 60px;
+  background-color: blanchedalmond;
+  text-emphasis-color: blue;
+  text-align: center;
+  font-size: 30px;
+  margin-top: 25px;
+  margin-left: 80rem;
+  padding-bottom: 50px;
+}
+.btn:hover {
+  color: #dddddd;
+  border-color: #dddddd;
+}
+.btn:active {
+  color: #bbbbbb;
+  border-color: #bbbbbb;
+}
+
+.compusa,
+.complexa {
+  width: 100%;
+  display: block;
+}
+
+.compusa span,
+.complexa span {
+  border: 3px solid rgb(9, 13, 245);
+  background-color: rgb(161, 193, 204);
+  padding-top: 5px;
+  padding-right: 3px;
+  padding-bottom: 5px;
+  padding-left: 1px;
+  text-transform: uppercase;
+  color: #000300;
+  font-size: 20px;
+}
+
+.pre {
+  font-size: 20px;
+}
+
+.cerinta {
+  font-size: 30px;
+  color: rgb(47, 30, 143);
+  padding-top: 15px;
+}
+
+.submit {
+  font-size: 30px;
+  color: rgb(218, 16, 16);
+  padding-top: 5px;
+  margin-top: 15px;
+  margin-bottom: 50px;
+}
+
+.afisare {
+  color: rgb(26, 26, 189);
+  font-size: large;
+}
